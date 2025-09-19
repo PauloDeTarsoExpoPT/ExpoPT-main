@@ -20,7 +20,7 @@ body{
   /* Fundo com gradiente + aurora animada */
   background:
     radial-gradient(1200px 600px at 50% -10%,#173b65 0%, var(--bg) 60%) fixed,
-    linear-gradient(180deg,var(--bg),var(--bg2)) fixed;
+    linear-gradient(90deg,var(--bg),var(--bg2)) fixed;
   position:relative;
   min-height:100dvh;
   overflow-x:hidden;
