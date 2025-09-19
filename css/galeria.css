@@ -1,11 +1,100 @@
-#grade_fotos{
-    
-}
+
+#grade_fotos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 0;
 
 .card{
-    background:green;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08), 0 1.5px 4px 0 rgba(0,0,0,0.04);
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 2px 8px 0 rgba(0,0,0,0.06);
 }
 
 .card img{
-    width: 300px;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-bottom: 1px solid #e0e0e0;
+    max-height: 420px;
+    object-position: top center;
+}
+
+/* Ajuste para fotos verticais (retrato) */
+.card img.vertical {
+    aspect-ratio: 3/4;
+    max-width: 260px;
+    max-height: 420px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.meta {
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+.nome {
+    font-weight: 600;
+    color: #1a237e;
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+    display:none;
+}
+
+#status, #contador {
+    margin: 1rem 0;
+    color: #607d8b;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#btn_carregar {
+    display: block;
+    margin: 2rem auto 0 auto;
+    padding: 0.8em 2.2em;
+    background: #1a237e;
+    color: #fff;
+    border: none;
+    border-radius: 2em;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(26,35,126,0.08);
+    transition: background 0.2s, transform 0.15s;
+}
+
+
+
+#btn_carregar:hover:enabled {
+    background: #3949ab;
+    transform: translateY(-2px) scale(1.03);
+}
+
+.conteudo{
+    max-width: 900px;
+    margin: 2rem auto 4rem auto;
+    padding:  40px;
+    background: red;
+}
+
+@media (max-width: 600px) {
+    #grade_fotos {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .card img {
+        max-width: 100%;
+    }
+}
 }
