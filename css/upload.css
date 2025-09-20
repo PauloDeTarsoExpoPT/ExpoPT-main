@@ -1,7 +1,7 @@
 /* ===== Upload ===== */
 .conteudo {
   max-width: 640px;
-  margin: 40px auto;
+  margin: 10px auto;
   padding: 20px;
 }
 
@@ -112,4 +112,10 @@ input[type="file"]::file-selector-button:hover {
 }
 .mensagem.erro {
   color: #f88;
+}
+
+@media(max-width:900px) {
+	body{
+		font-size: 14px; 
+	}
 }

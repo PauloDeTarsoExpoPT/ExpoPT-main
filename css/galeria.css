@@ -118,7 +118,8 @@
   overflow: hidden;
   background: rgba(255,255,255,.04); /* “fundo” para as bordas */
   border: 1px solid var(--line);
-  aspect-ratio: 4 / 3;               /* padrão: paisagem */
+  aspect-ratio: 4 / 3;  
+  margin: 0;             /* padrão: paisagem */
 }
 
 /* se for retrato, trocamos a proporção */
