@@ -1,0 +1,73 @@
+/* ===== Tema Geleiras — moderno, interativo, acessível ===== */
+:root {
+	--bg: #192a3c;
+	--bg2: #0b1d33;
+	--card: #0f223a;
+	--glass: rgba(255, 255, 255, .06);
+	--text: #eef7ff;
+	--muted: #cfe3f7;
+	--brand: #7dd3fc;
+	--brand2: #a6e3ff;
+	--line: #274365;
+	--accent: #b6f09c;
+	--radius: 16px;
+	--shadow: 0 12px 28px rgba(0, 0, 0, .22);
+
+	/* brilhos gelados & aurora */
+	--ice-glow: rgba(173, 216, 230, .35);
+	--aurora-1: #1aa3ff;
+	--aurora-2: #9efcff;
+	--aurora-3: #7df3c6;
+	--aurora-4: #a6e3ff;
+}
+
+* {
+	box-sizing: border-box
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0
+}
+
+body {
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+	color: var(--text);
+	line-height: 1.6;
+	/* Fundo com gradiente + aurora animada */
+	background:
+		radial-gradient(1200px 600px at 50% -10%, #173b65 0%, var(--bg) 60%) fixed,
+		linear-gradient(180deg, var(--bg), var(--bg2)) fixed;
+	position: relative;
+	min-height: 100dvh;
+	overflow-x: hidden;
+}
+
+body::after {
+	/* faixa aurora — movimento sutil */
+	content: "";
+	position: fixed;
+	inset: -10% -10% auto -10%;
+	height: 80vh;
+	pointer-events: none;
+	z-index: -1;
+	background:
+		radial-gradient(60% 120% at 20% 30%, color-mix(in oklab, var(--aurora-1), transparent 40%) 0 60%, transparent 70%),
+		radial-gradient(70% 100% at 80% 20%, color-mix(in oklab, var(--aurora-2), transparent 45%) 0 55%, transparent 75%),
+		radial-gradient(90% 130% at 60% 80%, color-mix(in oklab, var(--aurora-3), transparent 40%) 0 50%, transparent 72%);
+	filter: blur(24px) saturate(130%);
+	mix-blend-mode: screen;
+	animation: auroraFloat 22s ease-in-out infinite alternate;
+	opacity: .6;
+}
+
+@keyframes auroraFloat {
+	0% {
+		transform: translateY(-3%) translateX(-2%) scale(1.02)
+	}
+
+	100% {
+		transform: translateY(4%) translateX(2%) scale(1.05)
+	}
+}
