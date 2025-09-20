@@ -9,7 +9,7 @@ const elContador  = document.getElementById('contador');
 
 // Estado de paginação
 let paginaAtual     = 0;    
-const ITENS_POR_PAG = 3; 
+const ITENS_POR_PAG = 4; 
 const THUMB_W = 1024;    
 let totalPaginas    = null;
 let totalItens      = 0;
@@ -68,22 +68,15 @@ window.receberPagina = function(res) {
   for (const item of itens) {
     const card = document.createElement('article');
     card.className = 'card';
-
+    const figure = document.createElement('figure');  
+    figure.className = 'thumb';
     const img = document.createElement('img');
     img.loading = 'lazy';
     img.decoding = 'async';
     img.alt = item.nome || 'Foto';
     img.src = item.dataUrl || ''; // usamos dataUrl sempre
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    const nome = document.createElement('span');
-    nome.className = 'nome';
-    nome.textContent = item.nome || 'foto';
-    meta.appendChild(nome);
-
-    card.appendChild(img);
-    card.appendChild(meta);
+    card.appendChild(figure);
+    figure.appendChild(img);
     elGrade.appendChild(card);
   }
 

@@ -80,14 +80,11 @@
 		padding: 20px;
 		justify-content: space-around;
 	}
-	body{
-		font-size: 16px; 
-	}
 	.hide{
 		display: none;
 	}
 	body{
-		font-size: 12px; 
+		font-size: 14px; 
 	}
 }
 

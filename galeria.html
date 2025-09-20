@@ -9,22 +9,22 @@
 	<link rel="stylesheet" href="css/galeria.css">
 </head>
 <body>
-		<header id="site-header" class="header">
-			<div class="container header__wrap">
-				<a class="brand" href="index.html">
-					<img src="foto1.webp" alt="Colégio Paulo de Tarso" class="logo" />
-					<div class="brand__text">
-						<strong>EXPO PT 2025 -</strong>
-						<span>Colégio Paulo de Tarso</span>
-					</div>
-				</a>
-				<nav class="nav" aria-label="Navegação principal">
-					<a href="index.html" class="nav__link">Inicio</a>
-					<a href="galeria.html" class="nav__link">Galeria</a>
-					<a href="upload.html" class="nav__link">Upload</a>
-				</nav>
-			</div>
-		</header>
+	<header id="site-header" class="header">
+		<div class="container header__wrap">
+			<a class="brand" href="index.html">
+				<img src="foto1.webp" alt="Colégio Paulo de Tarso" class="logo" />
+				<div class="brand__text">
+					<strong>EXPO PT 2025 -</strong>
+					<span>Colégio Paulo de Tarso</span>
+				</div>
+			</a>
+			<nav class="nav" aria-label="Navegação principal">
+				<a href="index.html" class="nav__link">Inicio</a>
+				<a href="galeria.html" class="nav__link">Galeria</a>
+				<a href="upload.html" class="nav__link">Upload</a>
+			</nav>
+		</div>
+	</header>
 	<main class="conteudo" style="padding: 30px;">
 		<h2>Galeria de Fotos</h2>
 		<p id="status">Carregando fotos.....</p>
@@ -41,6 +41,50 @@
 		<br>
 		<div id="contador"></div>
 	</main>
+	<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog">
+		<img alt="">
+		<button type="button" class="lightbox__close" aria-label="Fechar (Esc)">Fechar</button>
+	</div>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+  const grid  = document.getElementById('grade_fotos');
+  const lb    = document.getElementById('lightbox');
+  const lbImg = lb.querySelector('img');
+  const btnX  = lb.querySelector('.lightbox__close');
+
+  // Abre: toca/clica em qualquer imagem da grade
+  grid.addEventListener('click', (e) => {
+    const img = e.target.closest('img');
+    if (!img) return;
+
+    // tenta pegar a versão maior (se houver parâmetro w)
+    let src = img.currentSrc || img.src;
+    src = src.replace(/([?&]w=)(\d+)/, '$12000'); // sobe para ~2000px
+
+    lbImg.src = src;
+    lb.classList.add('is-open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+  });
+
+  // Fecha em clique fora/overlay, botão ou ESC
+  const fechar = () => {
+    lb.classList.remove('is-open');
+    lb.setAttribute('aria-hidden', 'true');
+    lbImg.removeAttribute('src');
+    document.body.classList.remove('no-scroll');
+  };
+
+  lb.addEventListener('click', (e) => {
+    if (e.target === lb) fechar(); // clique no fundo fecha
+  });
+  btnX.addEventListener('click', fechar);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') fechar();
+  });
+});
+
+	</script>
 	<script src="script/galeria.js" defer></script>
 </body>
 </html>
