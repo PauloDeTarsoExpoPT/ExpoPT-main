@@ -38,10 +38,10 @@
       <p class="texto-suave">As imagens vão para a <strong>fila de moderação</strong>. Depois de aprovadas, entram no site.</p>
 
       <!-- IMPORTANTE: action = sua URL /exec do Apps Script -->
-      <form id="formulario_envio" method="POST" action="https://script.google.com/macros/s/AKfycbzwDrNjnVw66XLvFgu2hsTZYzRllgq5WB7vITfLHELzrfTqSUGjJuTAjXkcwJfEcsYeVA/exec" target="janela_envio">
+      <form id="formulario_envio" method="POST" action="https://script.google.com/macros/s/AKfycbxv4Rb6DUduupTOQGl3KMFt6bcyJEvnj5GmKmIYOZSNoKSi1NiXUK9_xTOaioO3TUCWfQ/exec" target="janela_envio">
         <label for="arquivo">Selecione uma imagem (JPG, PNG, WEBP — até 10 MB)</label>
         <!-- NÃO coloque name no input de arquivo. O JS criará um hidden com a imagem em Base64. -->
-        <input id="arquivo" type="file" accept="image/jpeg,image/png,image/webp" required />
+        <input id="arquivo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" required />
 
         <div class="linha">
           <!-- Este sim tem name: o backend precisa confirmar consentimento=sim -->

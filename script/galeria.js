@@ -1,6 +1,6 @@
 // galeria.js — Galeria paginada via JSONP
 // Backend: GET /exec?acao=listar_publico&page=1&per_page=12&w=1024&callback=receberPagina
-const URL_APPS = 'https://script.google.com/macros/s/AKfycbzwDrNjnVw66XLvFgu2hsTZYzRllgq5WB7vITfLHELzrfTqSUGjJuTAjXkcwJfEcsYeVA/exec';
+const URL_APPS = 'https://script.google.com/macros/s/AKfycbxv4Rb6DUduupTOQGl3KMFt6bcyJEvnj5GmKmIYOZSNoKSi1NiXUK9_xTOaioO3TUCWfQ/exec';
 
 const elGrade     = document.getElementById('grade_fotos');
 const elStatus    = document.getElementById('status');

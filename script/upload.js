@@ -1,26 +1,29 @@
 // script.js
-// Este arquivo deixa o HTML mais simples: o JavaScript faz o "trabalho pesado".
-// Estratégia: ler o arquivo do <input type="file">, converter para Base64 (DataURL)
-// e criar dinamicamente um campo oculto "arquivo64" para enviar ao Apps Script.
-// O <form> envia para o <iframe name="janela_envio">, sem recarregar a página.
-// O Apps Script responde com um postMessage, que capturamos abaixo.
+// Lê o arquivo do <input type="file">, converte para Base64 (DataURL)
+// e injeta um campo oculto "arquivo64" no <form>. O envio vai para um <iframe>
+// e o backend responde via postMessage sem recarregar a página.
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Configurações (devem bater com o backend)
+  // ===== Configurações (devem bater com o backend) =====
   const TAMANHO_MAX_MB = 10;
-  const TIPOS_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp'];
 
-  // Referências aos elementos do HTML
-  const formularioEnvio = document.getElementById('formulario_envio');
-  const campoArquivo = document.getElementById('arquivo');           // input de arquivo (sem name!)
-  const campoConsentimento = document.getElementById('consentimento'); // checkbox com name="consentimento"
-  const botaoEnviar = document.getElementById('botao_enviar');
-  const paragrafoMensagem = document.getElementById('mensagem');
+  // Inclui variantes reais vistas em alguns ambientes (ex.: *-sequence)
+  const TIPOS_PERMITIDOS = [
+    'image/jpeg', 'image/png', 'image/webp',
+    'image/heic', 'image/heif',
+    'image/heic-sequence', 'image/heif-sequence'
+  ];
 
-  /**
-   * Cria ou atualiza um <input type="hidden" name="<nome>"> dentro do formulário.
-   * Usamos isso para inserir "arquivo64" com o conteúdo Base64 da imagem.
-   */
+  // ===== Referências ao DOM =====
+  const formularioEnvio      = document.getElementById('formulario_envio');
+  const campoArquivo         = document.getElementById('arquivo');           // input file (sem name!)
+  const campoConsentimento   = document.getElementById('consentimento');     // checkbox com name="consentimento"
+  const botaoEnviar          = document.getElementById('botao_enviar');
+  const paragrafoMensagem    = document.getElementById('mensagem');
+
+  // ===== Utils =====
+
+  // Cria/atualiza um <input type="hidden" name="<nome>"> dentro do formulário
   function criarOuAtualizarOculto(nome, valor) {
     let inputOculto = formularioEnvio.querySelector(`input[type="hidden"][name="${nome}"]`);
     if (!inputOculto) {
@@ -33,13 +36,35 @@ document.addEventListener('DOMContentLoaded', () => {
     return inputOculto;
   }
 
-  /**
-   * Intercepta o envio do formulário:
-   * - valida tipo/tamanho da imagem
-   * - lê como DataURL (Base64)
-   * - cria o hidden "arquivo64"
-   * - envia o form para o iframe "janela_envio"
-   */
+  // Mapeia extensão -> MIME (fallback quando File.type vier vazio/incorreto)
+  function mimePorExtensao(nomeArquivo) {
+    const n = (nomeArquivo || '').toLowerCase();
+    if (/\.(jpe?g)$/.test(n)) return 'image/jpeg';
+    if (/\.png$/.test(n))     return 'image/png';
+    if (/\.webp$/.test(n))    return 'image/webp';
+    if (/\.heic$/.test(n))    return 'image/heic';
+    if (/\.heif$/.test(n))    return 'image/heif';
+    return null;
+  }
+
+  // Valida se o arquivo é permitido por MIME OU por extensão (fallback)
+  function fotoPermitida(file) {
+    const tipo = (file.type || '').toLowerCase();
+    const mimeExt = mimePorExtensao(file.name);
+
+    // Se o tipo já é um dos permitidos, ok
+    if (TIPOS_PERMITIDOS.includes(tipo)) return true;
+
+    // Se o tipo veio vazio/estranho, mas a extensão é reconhecida, também ok
+    if (!tipo && mimeExt) return true;
+
+    // Se o tipo não está na lista, mas a extensão mapeia para um MIME permitido, ok
+    if (mimeExt && TIPOS_PERMITIDOS.includes(mimeExt)) return true;
+
+    return false;
+  }
+
+  // ===== Envio do formulário =====
   formularioEnvio.addEventListener('submit', (evento) => {
     evento.preventDefault(); // impede envio imediato para prepararmos o Base64
     paragrafoMensagem.textContent = '';
@@ -51,8 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
       paragrafoMensagem.classList.add('erro');
       return;
     }
-    if (!TIPOS_PERMITIDOS.includes(arquivo.type)) {
-      paragrafoMensagem.textContent = 'Tipo de arquivo não permitido. Use JPG, PNG ou WEBP.';
+    if (!fotoPermitida(arquivo)) {
+      paragrafoMensagem.textContent = 'Tipo de arquivo não permitido. Use JPG, PNG, WEBP, HEIC ou HEIF.';
       paragrafoMensagem.classList.add('erro');
       return;
     }
@@ -73,7 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Converte a imagem para DataURL Base64 (ex.: "data:image/jpeg;base64,AAAA...")
     const leitor = new FileReader();
     leitor.onload = () => {
-      const dataURL = leitor.result;
+      let dataURL = leitor.result;
+
+      // Alguns ambientes geram 'data:application/octet-stream;base64,...' ou 'data:;base64,...'
+      if (/^data:(?:application\/octet-stream|);base64,/i.test(dataURL)) {
+        const mimeInf = mimePorExtensao(arquivo.name);
+        if (mimeInf) {
+          dataURL = dataURL.replace(/^data:(?:application\/octet-stream|);base64,/i, `data:${mimeInf};base64,`);
+        }
+      }
 
       // Cria/atualiza o campo oculto que o backend espera
       criarOuAtualizarOculto('arquivo64', dataURL);
@@ -90,10 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     leitor.readAsDataURL(arquivo);
   });
 
-  /**
-   * Recebe a resposta do Apps Script (enviada via postMessage no HTML de reply)
-   * e atualiza a interface sem recarregar a página.
-   */
+  // ===== Resposta do backend (via postMessage no <iframe>) =====
   window.addEventListener('message', (evento) => {
     const dados = evento.data || {};
     botaoEnviar.disabled = false;
