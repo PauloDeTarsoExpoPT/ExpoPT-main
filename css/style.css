@@ -66,6 +66,29 @@
 	.convite__wrap {
 		grid-template-columns: 1fr
 	}
+	.convite__img{
+		width: 75%;
+        margin: 0 auto;
+	}
+	.convite__left{
+		text-align: center;
+	}
+	.container{
+		padding: 0 50px;
+	}
+	.header__wrap{
+		padding: 20px;
+		justify-content: space-around;
+	}
+	body{
+		font-size: 16px; 
+	}
+	.hide{
+		display: none;
+	}
+	body{
+		font-size: 12px; 
+	}
 }
 
 .convite__title {
@@ -226,3 +249,28 @@
 		grid-template-columns: 1fr
 	}
 }
+
+/* Cards com layout em grid: título | descrição | (espaço flexível) | botão  */
+.card{
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  min-height: 260px;              /* opcional: garante altura uniforme */
+}
+
+/* Descrição com 2 linhas no máx. (não deixa card crescer demais) */
+.card .muted{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;          /* mostra até 2 linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em;              /* reserva espaço p/ 2 linhas (~1.3em cada) */
+}
+
+/* Mantém o botão alinhado embaixo em todos os cards */
+.card .btn--card{
+  align-self: end;                 /* gruda no “rodapé” do grid do card */
+  margin-top: 10px;                /* pequeno respiro */
+}
+
+/* Garante que os itens do grid pai estiquem (altura igual por linha) */
+.grid{ align-items: stretch; }

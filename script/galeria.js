@@ -8,8 +8,9 @@ const elBtnMais   = document.getElementById('btn_carregar');
 const elContador  = document.getElementById('contador');
 
 // Estado de paginação
-let paginaAtual     = 0;     // ainda não carregou
-const ITENS_POR_PAG = 5;    // ajuste aqui se quiser
+let paginaAtual     = 0;    
+const ITENS_POR_PAG = 3; 
+const THUMB_W = 1024;    
 let totalPaginas    = null;
 let totalItens      = 0;
 let itensMostrados  = 0;
@@ -32,7 +33,7 @@ function carregarProximaPagina() {
     acao: 'listar_publico',
     page: String(proxima),
     per_page: String(ITENS_POR_PAG),
-    w: '1024',
+    w: String(THUMB_W),         // ↓ peça thumbs menores
     callback: 'receberPagina'
   });
   s.src = `${URL_APPS}?${qs.toString()}`;
